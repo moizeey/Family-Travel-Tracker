@@ -2,19 +2,27 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import cors from "cors";
+import env from "dotenv";
 
 const app = express();
 const port = 3000;
+env.config();
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "world",
-  password: "nrhe8194",
-  port: 5432,
+  user: process.env.USER_NAME,
+  host: process.env.HOST,
+  database: process.env.DATBASE_NAME,
+  password: process.env.PASSWORD,
+  port: process.env.PORT,
 });
 
-db.connect();
+db.connect((err) => {
+  if (err) {
+    console.error("Failed to connect to the database:", err.stack);
+  } else {
+    console.log("Connected to the database successfully.");
+  }
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
